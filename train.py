@@ -92,6 +92,11 @@ if __name__ == '__main__':
 #     model.save_net('last')
     epoch_time_list = np.array(epoch_time_list)
     epoch_val_time_list = np.array(epoch_val_time_list)
+    print('Overall time: {:06.2f}'.format(epoch_time_list.sum() + epoch_val_time_list.sum()))
+    print('Overall train time: {:06.2f}'.format(epoch_time_list.sum()))
+    print('Overall val time: {:06.2f}'.format(epoch_val_time_list.sum()))
+    print('Average time per train epoch: {:06.2f}+-{:06.2f}'.format(epoch_time_list.mean(), 2*epoch_time_list.std()))
+    print('Average time per val epoch: {:06.2f}+-{:06.2f}'.format(epoch_val_time_list.mean(), 2*epoch_val_time_list.std()))
     print('Finish')
     
     
