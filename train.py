@@ -26,6 +26,9 @@ if __name__ == '__main__':
     random.seed(seed_value)
     np.random.seed(seed_value)
     
+    epoch_time_list = []
+    epoch_val_time_list = []
+    
     opt = BaseOptions().parse()   # get training options
     opt_v = copy.deepcopy(opt)
     opt_v.isTrain = False
@@ -61,7 +64,9 @@ if __name__ == '__main__':
 #             if global_iter % opt.loss_freq == 0:
                 
 #             if global_iter % opt.img_freq == 0:
-        print('End of training on epoch {} / {} \t Time Taken: {:04.2f} sec'.format(epoch, opt.n_epochs + opt.n_epochs_decay, time.time() - epoch_start_time))
+        epoch_time = time.time() - epoch_start_time 
+        epoch_time_list += [epoch_time]
+        print('End of training on epoch {} / {} \t Time Taken: {:04.2f} sec'.format(epoch, opt.n_epochs + opt.n_epochs_decay, epoch_time))
         print('Validation...')
         n_b = 0
         epoch_val_start_time = time.time()
@@ -74,7 +79,9 @@ if __name__ == '__main__':
                 mean_loss = model.get_current_losses_test()
             else:
                 mean_loss = acc_loss(mean_loss, model.get_current_losses_test())
-        print('End of validation on epoch {}  \t Time Taken: {:04.2f} sec'.format(epoch, time.time() - epoch_val_start_time))  
+        epoch_val_time = time.time() - epoch_val_start_time
+        epoch_val_time_list += [epoch_val_time]
+        print('End of validation on epoch {}  \t Time Taken: {:04.2f} sec'.format(epoch, epoch_val_time))  
         mean_loss = div_loss(mean_loss, n_b, epoch)
         print('Validation loss {}'.format(mean_loss['test_cross_entropy']))
 
@@ -83,4 +90,8 @@ if __name__ == '__main__':
 #             model.save_net(epoch)
         model.update_learning_rate()
 #     model.save_net('last')
+    epoch_time_list = np.array(epoch_time_list)
+    epoch_val_time_list = np.array(epoch_val_time_list)
     print('Finish')
+    
+    
